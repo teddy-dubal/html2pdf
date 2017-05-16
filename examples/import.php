@@ -19,7 +19,7 @@ try {
     $html2pdf = new Html2Pdf('P', 'A4', 'fr', true, 'UTF-8', array(0, 0, 0, 0));
     $html2pdf->pdf->SetDisplayMode('fullpage');
 
-    $html2pdf->setTemplate(dirname(__FILE__).'/res/modify.pdf');
+    $html2pdf->setTemplate(dirname(__FILE__).'/res/import.pdf');
     ob_start();
     include dirname(__FILE__).'/res/exemple00.php';
     $content = ob_get_clean();

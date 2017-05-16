@@ -14,7 +14,7 @@ namespace Spipu\Html2Pdf;
 
 use Spipu\Html2Pdf\Exception\HtmlParsingException;
 
-class MyPdf extends \TCPDF
+class MyPdf extends \FPDI
 {
     protected $_footerParam = array();
     protected $_transf      = array();

@@ -1,0 +1,22 @@
+version: '3'
+services:
+    app:
+      image: webdevops/php-nginx:alpine-php7
+      expose:
+        - "80"
+      networks:
+        - proxy_front
+        - proxy_back
+      volumes:
+        - .:/app
+      environment:
+        VIRTUAL_HOST: "html2pdf.dev.lan"
+        WEB_DOCUMENT_ROOT: /app/examples
+        WEB_ALIAS_DOMAIN: html2pdf.dev.lan
+      working_dir: /app
+
+networks:
+    proxy_front:
+        external: true
+    proxy_back:
+        external: true

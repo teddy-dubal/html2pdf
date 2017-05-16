@@ -58,6 +58,10 @@ class Html2Pdf
      * @var HtmlLexer
      */
     private $lexer;
+    /**
+     * @var int
+     */
+    private $templateId = null;
 
     /**
      * @var CssConverter
@@ -350,7 +354,19 @@ class Html2Pdf
 
         return $this;
     }
-
+    /**
+     * @access public
+     * @param string $filename
+     * @return Html2Pdf $this
+     */
+    public function setTemplate($filename)
+    {
+        if (file_exists($filename)) {
+            $this->pdf->setSourceFile($filename);
+            $this->templateId = $this->pdf->importPage(1);
+        }
+        return $this;
+    }
     /**
      * Set the test if the images exist or not
      *
@@ -626,6 +642,10 @@ class Html2Pdf
 
         $this->pdf->AddPage($this->_orientation, $this->_format);
 
+        if ($this->templateId) {
+            $this->pdf->useTemplate($this->templateId);
+        }
+        
         if ($resetPageNumber) {
             $this->pdf->myStartPageGroup();
         }

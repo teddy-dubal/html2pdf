@@ -3,11 +3,11 @@
  * Html2Pdf Library - example
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 require_once dirname(__FILE__).'/../vendor/autoload.php';
 
@@ -24,8 +24,10 @@ try {
 
     $html2pdf->pdf->SetDisplayMode('real');
     $html2pdf->writeHTML($content);
-    $html2pdf->Output('utf8.pdf');
+    $html2pdf->output('utf8.pdf');
 } catch (Html2PdfException $e) {
+    $html2pdf->clean();
+
     $formatter = new ExceptionFormatter($e);
     echo $formatter->getHtmlMessage();
 }

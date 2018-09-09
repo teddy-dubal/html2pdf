@@ -3,21 +3,21 @@
  * Html2Pdf Library - Tests
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf\Tests\Parsing;
 
-use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Tests\AbstractTest;
 
 /**
  * Class SrcOkTest
  */
-class SrcOkTest extends \PHPUnit_Framework_TestCase
+class SrcOkTest extends AbstractTest
 {
     /**
      * test: The image src is unknown
@@ -26,10 +26,9 @@ class SrcOkTest extends \PHPUnit_Framework_TestCase
      */
     public function testCase()
     {
-        $object = new Html2Pdf();
-        $object->pdf->SetTitle('PhpUnit Test');
+        $object = $this->getObject();
         $object->writeHTML('Hello World <img src="'.dirname(__FILE__).'/res/logo.png" />');
-        $result = $object->Output('test.pdf', 'S');
+        $result = $object->output('test.pdf', 'S');
 
         $this->assertContains('PhpUnit Test', $result);
     }

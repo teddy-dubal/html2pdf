@@ -3,11 +3,11 @@
  * Html2Pdf Library - Tag class
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf\Tag;
@@ -49,8 +49,6 @@ abstract class AbstractTag implements TagInterface
 
     /**
      * PHP constructor.
-     *
-     * @return AbstractTag
      */
     public function __construct()
     {
@@ -112,29 +110,4 @@ abstract class AbstractTag implements TagInterface
 
         return $this;
     }
-
-    /**
-     * get the name of the tag
-     *
-     * @return string
-     */
-    abstract public function getName();
-
-    /**
-     * Open the HTML tag
-     *
-     * @param array $properties properties of the HTML tag
-     *
-     * @return boolean
-     */
-    abstract public function open($properties);
-
-    /**
-     * Close the HTML tag
-     *
-     * @param array $properties properties of the HTML tag
-     *
-     * @return boolean
-     */
-    abstract public function close($properties);
 }

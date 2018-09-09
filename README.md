@@ -1,124 +1,49 @@
-Html2Pdf
-========
+# Html2Pdf
 
-Latest stable release : v4.6.0 (2016-03-30)
+Html2Pdf is a HTML to PDF converter written in PHP, and compatible with PHP **5.4** to **7.2**.
 
-How to use:
------------
+It allows the conversion of valid HTML in PDF format, to generate documents like invoices, documentation, ...
 
-### Requirements
+You have to write a code of HTML for Html2Pdf, and not try to convert directly an already existing html page.
 
-HTML2PDF works with PHP 5.3.2 and above.
+Specific tags have been implemented, to adapt the html standard to a PDF usage.
 
-### Installation
+You muse use Composer to install this library. 
 
-This package can be installed in your project through composer.
+It uses TCPDF for the PDF part.
 
-```
-composer require spipu/html2pdf
-```
+## Requirements
 
-If you wish to try html2pdf outside a main project, you can just clone the project and run composer:
+Html2Pdf works with PHP >5.4 and Composer.
 
-```
-git clone https://github.com/spipu/html2pdf.git
-cd html2pdf
-composer install
-```
+You will also need at least the following php extensions:
 
-### Recommendations
-   
- * Look at the examples provided to see how it works.
+* gd
+* mbstring
 
- * It is very important to provide valid HTML 4.01 to the converter,
-   but only what is in the `<body>`. Use the `<page>` tag. 
+## Documentation
 
- * for borders: it is advised that they are like `solid 1mm #000000`
+You will find the install documentation [here](./doc/install.md).
 
- * for padding, they are applicable only on tags `table`, `th`, `td`, `div`, `li`
+You will find all the documentation [here](./doc/README.md).
 
- * A default font can be specified, if the requested font does not exist or if no font is specified:
- 
- `$html2pdf->setDefaultFont('Arial');`
+You will find lots of examples [here](./examples/).
 
- * The possibility to protect your PDF is present, CF Example 7.
+## Donate
 
- * Some tests can be enabled (true) or disabled (false):
+You can support this project by making a [donation](http://html2pdf.fr/en/donate).
 
-  * `setTestIsImage` method:      test that images must exist
-  
-  * `setTestTdInOnePage` method:  test that the contents of TDs fit on one page
+## Change log
 
+See the [./CHANGELOG.md](./CHANGELOG.md) file.
 
- * A DEBUG mode to know the resources used is present.
-It is activated by adding the following command just after the contructor (see Example 0):
-`$htmlpdf->setModeDebug();`
-
-* Some specific tags have been introduced:
-
-  * `<page></page>`  (CF Exemple 7 & wiki)
-    * Determines the orientation, margins left, right, top and bottom, the background image
-    * and the background color of a page, its size and position, the footer.
-    * It is also possible to keep the header and footer of the previous pages,
-    * through the attribut `pageset="old"` (see Example 3 & 4 & wiki)
-
-  * `<page_header></page_header>` (CF Example 3 & wiki)
-
-  * `<page_footer></page_footer>` (CF Example 3 & wiki)
-
-  * `<nobreak></nobreak>` (CF wiki)
-    * Used to force the display of a section on the same page.
-    * If this section does not fit into the rest of the page, a page break is done before.
-
-  * `<barcode></barcode>`  (CF Examples 0 & 9 & wiki)
-    * Can insert barcodes in pdfs, CF Examples 0 and 9
-    * the possible types of codebar are alls of TCPDF
-
-  * `<qrcode></qrcode>` (CF Example 13 & wiki)
-    * can insert QRcode 2D barcodes
-    * (QR Code is registered trademark of DENSO WAVE INCORPORATED | http://www.denso-wave.com/qrcode/)
-
-  * `<bookmark></bookmark>` (CF Examples 7 & About & wiki)
-    * Can insert bookmark in pdfs, CF Example 7 and About.
-    * It is also possible to automatically create an index at the end of document (CF Example About & wiki)
-
-  * css property `rotate`:
-    * Values : 0, 90, 180, 270
-    * Works only on div (cf example 8)
-
-Change log:
------------
-
-See on this page: http://html2pdf.fr/en/download
-
-Help & Support:
----------------
+## Help & Support
 
 For questions and bug reports, please use the GitHub issues page.
-You may also find some help of the official forum (link below).
 
-Information:
-------------
+## License
 
-* Programmer: Spipu
-* Web Site  : http://html2pdf.fr/
-* Wiki      : http://html2pdf.fr/en/wiki
-* Support   : http://html2pdf.fr/en/forum
+This program is distributed under the OSL License. For more information see the [./LICENSE.md](./LICENSE.md) file.
 
-License:
---------
-```
- This program is distributed under the LGPL License,
- for more information see the LICENSE file or go to
- http://www.gnu.org/licenses/lgpl.html
+Copyright 2008-2017 by Laurent Minguet
 
- Copyright 2008-2016 by Laurent Minguet
-```
-
-Thanks:
--------
-
- * Olivier Plathey: for have made FPDF
- * Nicola Asuni: for the changes he has agreed to make to TCPDF
- * yAronet: for hosting support forum
- * Everyone who helped me to develop this library and to bring the texts

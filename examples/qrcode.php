@@ -3,11 +3,11 @@
  * Html2Pdf Library - example
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 require_once dirname(__FILE__).'/../vendor/autoload.php';
 
@@ -23,8 +23,10 @@ try {
     $html2pdf = new Html2Pdf('P', 'A4', 'fr');
     $html2pdf->pdf->SetDisplayMode('fullpage');
     $html2pdf->writeHTML($content);
-    $html2pdf->Output('qrcode.pdf');
+    $html2pdf->output('qrcode.pdf');
 } catch (Html2PdfException $e) {
+    $html2pdf->clean();
+
     $formatter = new ExceptionFormatter($e);
     echo $formatter->getHtmlMessage();
 }

@@ -3,11 +3,11 @@
  * Html2Pdf Library - myPdf class
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf;
@@ -36,6 +36,7 @@ class MyPdf extends \FPDI
      * @param boolean $unicode     TRUE means that the input text is unicode (default = true)
      * @param String  $encoding    charset encoding; default is UTF-8
      * @param boolean $diskcache   if TRUE reduce the RAM memory usage by caching temporary data on filesystem (slower).
+     * @param boolean $pdfa        If TRUE set the document to PDF/A mode.
      * @access public
      */
     public function __construct(
@@ -44,11 +45,11 @@ class MyPdf extends \FPDI
         $format = 'A4',
         $unicode = true,
         $encoding = 'UTF-8',
-        $diskcache = false
+        $diskcache = false,
+        $pdfa = false
     ) {
-    
         // call the parent constructor
-        parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache);
+        parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
 
         // init the specific parameters used by Html2Pdf
         $this->SetCreator(PDF_CREATOR);
@@ -69,18 +70,18 @@ class MyPdf extends \FPDI
      *
      * @param boolean $page display the page number
      * @param boolean $date display the date
-     * @param boolean $hour display the hour
+     * @param boolean $time display the time
      * @param boolean $form display a warning abour forms
      * @access public
      */
-    public function SetMyFooter($page = false, $date = false, $hour = false, $form = false)
+    public function SetMyFooter($page = false, $date = false, $time = false, $form = false)
     {
         $page    = ($page ? true : false);
         $date    = ($date ? true : false);
-        $hour    = ($hour ? true : false);
+        $time    = ($time ? true : false);
         $form    = ($form ? true : false);
 
-        $this->_footerParam = array('page' => $page, 'date' => $date, 'hour' => $hour, 'form' => $form);
+        $this->_footerParam = array('page' => $page, 'date' => $date, 'time' => $time, 'form' => $form);
     }
 
     /**
@@ -94,19 +95,19 @@ class MyPdf extends \FPDI
         // prepare the text from the tranlated text
         $txt = '';
         if ($this->_footerParam['form']) {
-            $txt = (Locale::get('pdf05'));
+            $txt = Locale::get('pdf05');
         }
-        if ($this->_footerParam['date'] && $this->_footerParam['hour']) {
-            $txt.= ($txt ? ' - ' : '').(Locale::get('pdf03'));
+        if ($this->_footerParam['date'] && $this->_footerParam['time']) {
+            $txt.= ($txt ? ' - ' : '').Locale::get('pdf03');
         }
-        if ($this->_footerParam['date'] && !$this->_footerParam['hour']) {
-            $txt.= ($txt ? ' - ' : '').(Locale::get('pdf01'));
+        if ($this->_footerParam['date'] && !$this->_footerParam['time']) {
+            $txt.= ($txt ? ' - ' : '').Locale::get('pdf01');
         }
-        if (!$this->_footerParam['date'] && $this->_footerParam['hour']) {
-            $txt.= ($txt ? ' - ' : '').(Locale::get('pdf02'));
+        if (!$this->_footerParam['date'] && $this->_footerParam['time']) {
+            $txt.= ($txt ? ' - ' : '').Locale::get('pdf02');
         }
         if ($this->_footerParam['page']) {
-            $txt.= ($txt ? ' - ' : '').(Locale::get('pdf04'));
+            $txt.= ($txt ? ' - ' : '').Locale::get('pdf04');
         }
 
         if (strlen($txt)>0) {
@@ -265,7 +266,7 @@ class MyPdf extends \FPDI
         $path = '';
 
         // if we have the position and the size of the rectangle, we can proceed
-        if ($x!==null && $y!==null && $w!==null && $h!==null) {
+        if ($x !== null && $y !== null && $w !== null && $h !== null) {
             // the positions of the rectangle's corners
             $x1 = $x*$this->k;
             $y1 = ($this->h-$y)*$this->k;
@@ -421,7 +422,7 @@ class MyPdf extends \FPDI
         // init the curve
         $path = '';
 
-        if ($ext1X-$cenX!=0) {
+        if ($ext1X-$cenX !=0) {
             $xt1 = $cenX+($ext1X-$cenX);
             $yt1 = $cenY+($ext2Y-$cenY)*self::MY_ARC;
             $xt2 = $cenX+($ext1X-$cenX)*self::MY_ARC;
@@ -435,7 +436,7 @@ class MyPdf extends \FPDI
         $path.= sprintf('%.2F %.2F m ', $ext1X, $ext1Y);
         $path.= sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c ', $xt1, $yt1, $xt2, $yt2, $ext2X, $ext2Y);
 
-        if ($int1X-$cenX!=0) {
+        if ($int1X-$cenX !=0) {
             $xt1 = $cenX+($int1X-$cenX)*self::MY_ARC;
             $yt1 = $cenY+($int2Y-$cenY);
             $xt2 = $cenX+($int1X-$cenX);
@@ -490,7 +491,7 @@ class MyPdf extends \FPDI
         // init the curve
         $path = '';
 
-        if ($ext1X-$cenX!=0) {
+        if ($ext1X-$cenX !=0) {
             $xt1 = $cenX+($ext1X-$cenX);
             $yt1 = $cenY+($ext2Y-$cenY)*self::MY_ARC;
             $xt2 = $cenX+($ext1X-$cenX)*self::MY_ARC;
@@ -586,29 +587,41 @@ class MyPdf extends \FPDI
     }
 
     /**
-     * we redifine the original SetX method, because we don't want the automatic treatment.
-     * It is Html2Pdf that make the treatment
+     * we redefine the original SetX method, because we don't want the automatic treatment.
+     * It is Html2Pdf that make the treatment.
+     * If language is RTL direction this method will call to parent (TCPDF class).
      *
      * @param float   $x
-     * @param boolean $rtloff NOT USED
+     * @param boolean $rtloff
      * @access public
      */
     public function SetX($x, $rtloff = false)
     {
+        if (!$rtloff && $this->rtl) {
+            parent::SetX($x, $rtloff);
+            return;
+        }
+
         $this->x=$x;
     }
 
     /**
-     * we redifine the original SetY method, because we don't want the automatic treatment.
-     * It is Html2Pdf that make the treatment
+     * we redefine the original SetY method, because we don't want the automatic treatment.
+     * It is Html2Pdf that make the treatment.
+     * If language is RTL direction this method will call to parent (TCPDF class).
      *
      * @param float   $y
      * @param boolean $resetx Reset the X position
-     * @param boolean $rtloff NOT USED
+     * @param boolean $rtloff
      * @access public
      */
     public function SetY($y, $resetx = true, $rtloff = false)
     {
+        if (!$rtloff && $this->rtl) {
+            parent::SetY($y, $resetx, $rtloff);
+            return;
+        }
+
         if ($resetx) {
             $this->x=$this->lMargin;
         }
@@ -617,16 +630,22 @@ class MyPdf extends \FPDI
     }
 
     /**
-     * we redifine the original SetXY method, because we don't want the automatic treatment.
-     * It is Html2Pdf that make the treatment
+     * we redefine the original SetXY method, because we don't want the automatic treatment.
+     * It is Html2Pdf that make the treatment.
+     * If language is RTL direction this method will call to parent (TCPDF class).
      *
      * @param integer $x
      * @param integer $y
-     * @param boolean $rtloff NOT USED
+     * @param boolean $rtloff
      * @access public
      */
     public function SetXY($x, $y, $rtloff = false)
     {
+        if (!$rtloff && $this->rtl) {
+            parent::SetXY($x, $y, $rtloff);
+            return;
+        }
+
         $this->x=$x;
         $this->y=$y;
     }
@@ -685,7 +704,7 @@ class MyPdf extends \FPDI
 
         // Style : fill
         if ($styles['fill']) {
-            $this->setFillColorArray($styles['fill']);
+            $this->SetFillColorArray($styles['fill']);
             $style.= 'F';
         }
 
@@ -728,9 +747,9 @@ class MyPdf extends \FPDI
         $y4=$y+$h;
 
         // get the Closing operator from the PDF Style
-        if ($style=='F') {
+        if ($style === 'F') {
             $op='f';
-        } elseif ($style=='FD' || $style=='DF') {
+        } elseif ($style === 'FD' || $style === 'DF') {
             $op='B';
         } else {
             $op='S';
@@ -778,9 +797,9 @@ class MyPdf extends \FPDI
     public function svgEllipse($x0, $y0, $rx, $ry, $style)
     {
         // get the Closing operator from the PDF Style
-        if ($style=='F') {
+        if ($style === 'F') {
             $op='f';
-        } elseif ($style=='FD' || $style=='DF') {
+        } elseif ($style === 'FD' || $style === 'DF') {
             $op='B';
         } else {
             $op='S';
@@ -801,9 +820,9 @@ class MyPdf extends \FPDI
     public function svgPolygone($actions, $style)
     {
         // get the Closing operator from the PDF Style
-        if ($style=='F') {
+        if ($style === 'F') {
             $op='f';
-        } elseif ($style=='FD' || $style=='DF') {
+        } elseif ($style === 'FD' || $style === 'DF') {
             $op='B';
         } else {
             $op='S';
@@ -815,12 +834,21 @@ class MyPdf extends \FPDI
 
         foreach ($actions as $action) {
             switch ($action[0]) {
-            // Start the Path
+                // Start the Path - move - absolute
                 case 'M':
-                case 'm':
                     $first = $action;
                     $x = $action[1];
                     $y = $action[2];
+                    $xc = $x;
+                    $yc = $y;
+                    $this->_Point($x, $y, true);
+                    break;
+
+                // Start the Path - move - relative
+                case 'm':
+                    $first = $action;
+                    $x = $last[0]+$action[1];
+                    $y = $last[1]+$action[2];
                     $xc = $x;
                     $yc = $y;
                     $this->_Point($x, $y, true);
@@ -1152,7 +1180,7 @@ class MyPdf extends \FPDI
         $v['D'] = $v['dXr']*$v['dXr'] + $v['dYr']*$v['dYr'];
 
         // if |vector| is Null, or if |vector| > 2 : impossible to make a arc => Line
-        if ($v['D']==0 || $v['D']>4) {
+        if ($v['D'] == 0 || $v['D']>4) {
             $this->_Line($x2, $y2, $trans);
             return false;
         }
@@ -1237,7 +1265,7 @@ class MyPdf extends \FPDI
         }
 
         // apply the Transformation Matrix
-        list($x,$y) = array(($x*$m[0]+$y*$m[2]+$m[4]),($x*$m[1]+$y*$m[3]+$m[5]));
+        list($x, $y) = array(($x*$m[0]+$y*$m[2]+$m[4]),($x*$m[1]+$y*$m[3]+$m[5]));
 
         // if true => convert into PDF unit
         if ($trans) {
@@ -1301,9 +1329,10 @@ class MyPdf extends \FPDI
      * @param int $h height in user units
      * @param int $labelFontsize of the Test Label. If false : no Label
      * @param array $color color of the foreground
+     * @param string $dimension 1D or 2D
      * @access public
      */
-    public function myBarcode($code, $type, $x, $y, $w, $h, $labelFontsize, $color)
+    public function myBarcode($code, $type, $x, $y, $w, $h, $labelFontsize, $color, $dimension = '1D')
     {
         // the style of the barcode
         $style = array(
@@ -1314,11 +1343,16 @@ class MyPdf extends \FPDI
         );
 
         // build the barcode
-        $this->write1DBarcode($code, $type, $x, $y, $w, $h, '', $style, 'N');
+        if ($dimension === '2D') {
+            // PDF417, DATAMATRIX ...
+            $this->write2DBarcode($code, $type, $x, $y, $w, $h, '', $style, 'N');
+        } else {
+            $this->write1DBarcode($code, $type, $x, $y, $w, $h, '', $style, 'N');
+        }
 
         // it Label => add the FontSize to the height
         if ($labelFontsize) {
-            $h+= ($labelFontsize);
+            $h+= $labelFontsize;
         }
 
         // return the size of the barcode
@@ -1420,7 +1454,7 @@ class MyPdf extends \FPDI
      */
     public function getMyAliasNbPages()
     {
-        if ($this->_myLastPageGroupNb==0) {
+        if ($this->_myLastPageGroupNb == 0) {
             return $this->getAliasNbPages();
         } else {
             $old = $this->currpagegroup;
@@ -1441,11 +1475,11 @@ class MyPdf extends \FPDI
      */
     public function getMyNumPage($page = null)
     {
-        if ($page===null) {
+        if ($page === null) {
             $page = $this->page;
         }
 
-        if ($this->_myLastPageGroupNb==0) {
+        if ($this->_myLastPageGroupNb == 0) {
             return $page;
         } else {
             return $page-$this->_myLastPageGroup;

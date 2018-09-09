@@ -1,16 +1,20 @@
-#Eclipse
+# Eclipse
 /.settings/
 /.buildpath
 /.project
-nbproject
+/nbproject
 
-#PHPStorm
+# PHPStorm
 /.idea
 
-#examples
-/test/*.pdf
+# Examples
+/test/*
+!/test/generate.sh
 
-bin/
-vendor/
-composer.lock
-composer.phar
+# PhpUnit
+/build/
+
+# Composer
+/bin/
+/vendor/
+/composer.lock

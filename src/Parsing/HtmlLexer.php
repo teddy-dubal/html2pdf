@@ -3,11 +3,11 @@
  * Html2Pdf Library - parsing Html class
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 namespace Spipu\Html2Pdf\Parsing;
 
@@ -72,7 +72,7 @@ class HtmlLexer
             unset($parse);
         }
         // if a text is present in the end, we save it
-        if ($str != '') {
+        if ($str !== '') {
             $tokens[] = new Token('txt', $str);
         }
 

@@ -3,11 +3,11 @@
  * Html2Pdf Library - Tests
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf\Tests\Parsing;
@@ -58,12 +58,13 @@ class HtmlLexerTest extends \PHPUnit_Framework_TestCase
                 )
             ),
             array(
-                "<a><!-- comment -->\n<b><c>",
+                "<a><!-- comment -->\n<b><c>test",
                 array(
                     array('code', '<a>', 1),
                     array('txt', "\n", -1),
                     array('code', '<b>', 2),
                     array('code', '<c>', 2),
+                    array('txt', "test", -1),
                 )
             )
         );

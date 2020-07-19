@@ -3,21 +3,22 @@
  * Html2Pdf Library - Tests
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
-namespace Spipu\Html2Pdf\Tests\Parsing;
+namespace Spipu\Html2Pdf\Tests\Image;
 
-use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Exception\ImageException;
+use Spipu\Html2Pdf\Tests\AbstractTest;
 
 /**
  * Class BackgroundErrorTest
  */
-class BackgroundErrorTest extends \PHPUnit_Framework_TestCase
+class BackgroundErrorTest extends AbstractTest
 {
     /**
      * test: The image src is unknown
@@ -27,9 +28,15 @@ class BackgroundErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCase()
     {
-        $object = new Html2Pdf();
-        $object->pdf->SetTitle('PhpUnit Test');
-        $object->writeHTML('<div style="background-image: url('.dirname(__FILE__).'/res/wrong.png)">Hello World</div>');
-        $object->Output('test.pdf', 'S');
+        $image = '/res/wrong.png';
+
+        try {
+            $object = $this->getObject();
+            $object->writeHTML('<div style="background-image: url('.$image.')">Hello World</div>');
+            $object->output('test.pdf', 'S');
+        } catch (ImageException $e) {
+            $this->assertSame($image, $e->getImage());
+            throw $e;
+        }
     }
 }

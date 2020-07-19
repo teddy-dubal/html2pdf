@@ -3,21 +3,22 @@
  * Html2Pdf Library - Tests
  *
  * HTML => PDF converter
- * distributed under the LGPL License
+ * distributed under the OSL-3.0 License
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2016 Laurent MINGUET
+ * @copyright 2017 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf\Tests\Tag;
 
 use Spipu\Html2Pdf\Html2Pdf;
+use Spipu\Html2Pdf\Tests\AbstractTest;
 
 /**
  * Class TdTooLongTest
  */
-class TdTooLongTest extends \PHPUnit_Framework_TestCase
+class TdTooLongTest extends AbstractTest
 {
     /**
      * test
@@ -33,9 +34,8 @@ class TdTooLongTest extends \PHPUnit_Framework_TestCase
             $sentences.= $sentence;
         }
 
-        $object = new Html2Pdf();
-        $object->pdf->SetTitle('PhpUnit Test');
+        $object = $this->getObject();
         $object->writeHTML('<table><tr><td style="width: 28mm">'.$sentences.'</td></tr></table>');
-        $object->Output('test.pdf', 'S');
+        $object->output('test.pdf', 'S');
     }
 }

@@ -32,7 +32,7 @@
                     page [[page_cu]]/[[page_nb]]
                 </td>
                 <td style="width: 33%; text-align: right">
-                    &copy;Spipu 2008-2015
+                    &copy;Spipu 2008-<?php echo date('Y'); ?>
                 </td>
             </tr>
         </table>
@@ -51,7 +51,7 @@
     <div class="note">
         Html2Pdf est un convertisseur de code HTML vers PDF écrit en PHP5, utilisant la librairie <a href="http://tcpdf.org">TCPDF.</a><br>
         <br>
-        Il permet la conversion d'HTML et d'xHTML valide au format PDF, et est distribué sous licence LGPL.<br>
+        Il permet la conversion d'HTML et d'xHTML valide au format PDF, et est distribué sous licence OSL-3.0.<br>
         <br>
         Cette librairie a été conçue pour gérer principalement les TABLE imbriquées afin de générer des factures, bon de livraison, et autres documents officiels.<br>
         <br>
@@ -90,7 +90,7 @@
         <li>&lt;sup&gt; : Exemple<sup>haut</sup>.</li>
         <li>&lt;sub&gt; : Exemple<sub>bas</sub>.</li>
         <li>&lt;u&gt; : Texte <u>souligné</u></li>
-        <li>&lt;table&gt;, &lt;td&gt;, &lt;th&gt;, &lt;tr&gt;, &lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;, &lt;col&gt; </li>
+        <li>&lt;table&gt;, &lt;td&gt;, &lt;th&gt;, &lt;tr&gt;, &lt;thead&gt;, &lt;tbody&gt;, &lt;tfoot&gt;, &lt;col&gt;, &lt;colgroup&gt; </li>
         <li>&lt;ol&gt;, &lt;ul&gt;, &lt;li&gt;</li>
         <li>&lt;form&gt;, &lt;input&gt;, &lt;textarea&gt;, &lt;select&gt;, &lt;option&gt;</li>
         <li>&lt;fieldset&gt;, &lt;legend&gt;</li>
@@ -237,6 +237,6 @@
         <li>Elle ne permet généralement pas la conversion directe d'une page HTML en PDF, ni la conversion du résultat d'un WYSIWYG en PDF.</li>
         <li>Cette librairie est là pour faciliter la génération de documents PDF, pas pour convertir n'importe quelle page HTML.</li>
         <li>Les formulaires ne marchent pas avec tous les viewers PDFs...</li>
-        <li>Lisez bien le wiki : <a href="http://wiki.spipu.net/doku.php?id=html2pdf:Accueil">http://wiki.spipu.net/doku.php?id=html2pdf:Accueil</a>.</li>
+        <li>Lisez bien la documentation : <a href="https://github.com/spipu/html2pdf/blob/master/doc/README.md">https://github.com/spipu/html2pdf/blob/master/doc/README.md</a>.</li>
     </ul>
 </page>

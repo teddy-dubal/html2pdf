@@ -1346,7 +1346,7 @@ class MyPdf extends TcpdfFpdi
         // build the barcode
         if ($dimension === '2D') {
             // PDF417, DATAMATRIX ...
-            $this->write2DBarcode($code, $type, $x, $y, $w, $h, '', $style, 'N');
+            $this->write2DBarcode($code, $type, $x, $y, $w, $h, $style, 'N');
         } else {
             $this->write1DBarcode($code, $type, $x, $y, $w, $h, '', $style, 'N');
         }

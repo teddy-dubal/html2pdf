@@ -621,8 +621,17 @@ class Css
         $class = array();
         $tmp = isset($param['class']) ? strtolower(trim($param['class'])) : '';
         $tmp = explode(' ', $tmp);
+        
+        // replace some values
+        $toReplace = array(
+            '[[page_cu]]' => $this->pdf->getMyNumPage()
+        );
+        
         foreach ($tmp as $k => $v) {
             $v = trim($v);
+            if (strlen($v)>0) {
+                $v = str_replace(array_keys($toReplace), array_values($toReplace), $v);
+            }
             if ($v) {
                 $class[] = $v;
             }
@@ -837,26 +846,26 @@ class Css
                     }
                     $val = array_values($val);
                     $this->duplicateBorder($val);
-                    $this->value['margin']['t'] = $this->cssConverter->convertToMM($val[0], 0);
-                    $this->value['margin']['r'] = $this->cssConverter->convertToMM($val[1], 0);
-                    $this->value['margin']['b'] = $this->cssConverter->convertToMM($val[2], 0);
-                    $this->value['margin']['l'] = $this->cssConverter->convertToMM($val[3], 0);
+                    $this->value['margin']['t'] = $this->cssConverter->convertToMM($val[0], $this->getLastHeight());
+                    $this->value['margin']['r'] = $this->cssConverter->convertToMM($val[1], $this->getLastWidth());
+                    $this->value['margin']['b'] = $this->cssConverter->convertToMM($val[2], $this->getLastHeight());
+                    $this->value['margin']['l'] = $this->cssConverter->convertToMM($val[3], $this->getLastWidth());
                     break;
 
                 case 'margin-top':
-                    $this->value['margin']['t'] = $this->cssConverter->convertToMM($val, 0);
+                    $this->value['margin']['t'] = $this->cssConverter->convertToMM($val, $this->getLastHeight());
                     break;
 
                 case 'margin-right':
-                    $this->value['margin']['r'] = $this->cssConverter->convertToMM($val, 0);
+                    $this->value['margin']['r'] = $this->cssConverter->convertToMM($val, $this->getLastWidth());
                     break;
 
                 case 'margin-bottom':
-                    $this->value['margin']['b'] = $this->cssConverter->convertToMM($val, 0);
+                    $this->value['margin']['b'] = $this->cssConverter->convertToMM($val, $this->getLastHeight());
                     break;
 
                 case 'margin-left':
-                    $this->value['margin']['l'] = $this->cssConverter->convertToMM($val, 0);
+                    $this->value['margin']['l'] = $this->cssConverter->convertToMM($val, $this->getLastWidth());
                     break;
 
                 case 'border':

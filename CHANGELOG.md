@@ -2,10 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
-## [5.2.1](https://github.com/spipu/html2pdf/compare/v5.2.0...master) - unreleased
+## [5.2.3](https://github.com/spipu/html2pdf/compare/v5.2.2...master) - unreleased
+
+  *  fix issue on write2DBarcode parameters - thanks to @Sarigue
+
+## [5.2.2](https://github.com/spipu/html2pdf/compare/v5.2.1...v5.2.2) - 2020-03-22
+
+  * allow usage of [[page_cu]] in css class names - thanks to @marbetschar - see example 15
+  * add support for BASE64 encoded images - thanks to @darius-heavy
+  * add Chinese local file - thanks to @Jaggle
+  * add powershell test script
+  * bump supported version from 5.4-7.2 to 5.6-7.4 - thanks to @coffeemedia
+  * fix issue on \_drawRectangle where array offset was being accessed on value of type null - thanks to @coffeemedia
+  * fix issue on lower-roman style - thanks to @jigneshsolanki
+  * fix issue on composer autoload warning - thanks to @adrienfr
+
+## [5.2.1](https://github.com/spipu/html2pdf/compare/v5.2.0...v5.2.1) - 2018-10-26
 
   * add `cert` tag - thanks to @LittleBigFox
-  * rename all the examples from `exemple` to `example`
+  * add `balloon` example - issue #385
+  * change the name of all the examples from `exemple` to `example`
+  * fix tag parser - css style corruption
+  * fix issue on relative margin calculation
+  * fix issue on border radius calculation
+  * fix issue on page background image width - issue #394
+  * fix issue on qrcode value with multi lines - issue #390
+  * fix issue on colspan usage when all the columns don't really exist - issue #360
+  * fix documentation - thanks to @noxlux and @tpohchai
 
 ## [5.2.0](https://github.com/spipu/html2pdf/compare/v5.1.0...v5.2.0) - 2018-07-31
 

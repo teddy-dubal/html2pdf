@@ -414,11 +414,11 @@ class Html2Pdf
      * @param string $filename
      * @return Html2Pdf $this
      */
-    public function setTemplate($filename)
+    public function setTemplate($filename,$page = 1)
     {
         if (file_exists($filename)) {
             $this->pdf->setSourceFile($filename);
-            $this->templateId = $this->pdf->importPage(1);
+            $this->templateId = $this->pdf->importPage($page);
         }
         return $this;
     }

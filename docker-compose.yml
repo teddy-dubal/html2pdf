@@ -1,7 +1,7 @@
 version: '3'
 services:
     app:
-      image: webdevops/php-nginx:alpine-php7
+      image: webdevops/php-nginx:7.4-alpine
       expose:
         - "80"
       networks:

@@ -27,10 +27,6 @@
     "phpunit/phpunit": "^5.0 || ^9.0",
     "phake/phake": "^4.4"
   },
-  "suggest": {
-    "fagundes/zff-html2pdf": "if you need to integrate Html2Pdf with Zend Framework 2 (zf2)",
-    "ext-gd": "Allows to embed images into the PDF"
-  },
   "autoload": {
     "psr-4": {
       "Spipu\\Html2Pdf\\": "src/"

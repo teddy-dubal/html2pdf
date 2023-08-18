@@ -7,26 +7,32 @@
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2017 Laurent MINGUET
+ * @copyright 2023 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf;
 
 use setasign\Fpdi\TcpdfFpdi;
 use Spipu\Html2Pdf\Exception\HtmlParsingException;
+use TCPDF;
 
 class MyPdf extends TcpdfFpdi
 {
-    protected $_footerParam = array();
-    protected $_transf = array();
-    protected $_myLastPageGroup = null;
+    protected $_footerParam       = array();
+    protected $_transf            = array();
+    protected $_myLastPageGroup   = null;
     protected $_myLastPageGroupNb = 0;
 
     // used to make a radius with bezier : (4/3 * (sqrt(2) - 1))
     const MY_ARC = 0.5522847498;
 
-    // nb of segment to build a arc with bezier curv
+    // nb of segment to build an arc with bezier curv
     const ARC_NB_SEGMENT = 8;
+
+    /**
+     * @var float
+     */
+    protected $ws = 0.;
 
     /**
      * class constructor
@@ -114,12 +120,12 @@ class MyPdf extends TcpdfFpdi
         if (strlen($txt) > 0) {
             // replace some values
             $toReplace = array(
-                '[[date_d]]' => date('d'),
-                '[[date_m]]' => date('m'),
-                '[[date_y]]' => date('Y'),
-                '[[date_h]]' => date('H'),
-                '[[date_i]]' => date('i'),
-                '[[date_s]]' => date('s'),
+                '[[date_d]]'  => date('d'),
+                '[[date_m]]'  => date('m'),
+                '[[date_y]]'  => date('Y'),
+                '[[date_h]]'  => date('H'),
+                '[[date_i]]'  => date('i'),
+                '[[date_s]]'  => date('s'),
                 '[[page_cu]]' => $this->getMyNumPage(),
                 '[[page_nb]]' => $this->getMyAliasNbPages(),
             );
@@ -133,22 +139,22 @@ class MyPdf extends TcpdfFpdi
     }
 
     /**
-     * after cloning a object, we does not want to clone all the front informations
-     * because it take a lot a time and a lot of memory => we use reference
+     * after cloning an object, we do not want to clone all the front information
+     * because it takes a lot a time and a lot of memory => we use reference
      *
      * @param myPdf &$pdf
      * @access public
      */
     public function cloneFontFrom(&$pdf)
     {
-        $this->n = &$pdf->getN();
-        $this->fonts = &$pdf->getFonts();
-        $this->FontFiles = &$pdf->getFontFiles();
-        $this->diffs = &$pdf->getDiffs();
-        $this->fontlist = &$pdf->getFontList();
-        $this->numfonts = &$pdf->getNumFonts();
-        $this->fontkeys = &$pdf->getFontKeys();
-        $this->font_obj_ids = &$pdf->getFontObjIds();
+        $this->n                = &$pdf->getN();
+        $this->fonts            = &$pdf->getFonts();
+        $this->FontFiles        = &$pdf->getFontFiles();
+        $this->diffs            = &$pdf->getDiffs();
+        $this->fontlist         = &$pdf->getFontList();
+        $this->numfonts         = &$pdf->getNumFonts();
+        $this->fontkeys         = &$pdf->getFontKeys();
+        $this->font_obj_ids     = &$pdf->getFontObjIds();
         $this->annotation_fonts = &$pdf->getAnnotFonts();
     }
 
@@ -156,7 +162,7 @@ class MyPdf extends TcpdfFpdi
      * multiple public accessor for some private attributs
      * used only by cloneFontFrom
      *
-     * @return &array
+     * @return array
      * @access public
      */
     public function &getFonts()
@@ -199,7 +205,7 @@ class MyPdf extends TcpdfFpdi
     /**
      * Verify that a Font is already loaded
      *
-     * @param string Font Key
+     * @param string $fontKey Font Key
      * @return boolean
      * @access public
      */
@@ -230,7 +236,7 @@ class MyPdf extends TcpdfFpdi
     /**
      * set the Word Spacing
      *
-     * @param float word spacing
+     * @param float $ws word spacing
      * @access public
      */
     public function setWordSpacing($ws = 0.)
@@ -412,13 +418,13 @@ class MyPdf extends TcpdfFpdi
         $ext2X = $ext2X * $this->k;
         $int1X = $int1X * $this->k;
         $int2X = $int2X * $this->k;
-        $cenX = $cenX * $this->k;
+        $cenX  = $cenX * $this->k;
 
         $ext1Y = ($this->h - $ext1Y) * $this->k;
         $ext2Y = ($this->h - $ext2Y) * $this->k;
         $int1Y = ($this->h - $int1Y) * $this->k;
         $int2Y = ($this->h - $int2Y) * $this->k;
-        $cenY = ($this->h - $cenY) * $this->k;
+        $cenY  = ($this->h - $cenY) * $this->k;
 
         // init the curve
         $path = '';
@@ -481,13 +487,13 @@ class MyPdf extends TcpdfFpdi
         // prepare the coordinates
         $ext1X = $ext1X * $this->k;
         $ext2X = $ext2X * $this->k;
-        $intX = $intX * $this->k;
-        $cenX = $cenX * $this->k;
+        $intX  = $intX * $this->k;
+        $cenX  = $cenX * $this->k;
 
         $ext1Y = ($this->h - $ext1Y) * $this->k;
         $ext2Y = ($this->h - $ext2Y) * $this->k;
-        $intY = ($this->h - $intY) * $this->k;
-        $cenY = ($this->h - $cenY) * $this->k;
+        $intY  = ($this->h - $intY) * $this->k;
+        $cenY  = ($this->h - $cenY) * $this->k;
 
         // init the curve
         $path = '';
@@ -535,8 +541,8 @@ class MyPdf extends TcpdfFpdi
     /**
      * add a Translate transformation
      *
-     * @param float $Tx
-     * @param float $Ty
+     * @param $xT
+     * @param $yT
      * @access public
      */
     public function setTranslate($xT, $yT)
@@ -557,8 +563,8 @@ class MyPdf extends TcpdfFpdi
      * add a Rotate transformation
      *
      * @param float $angle
-     * @param float $Cx
-     * @param float $Cy
+     * @param float|null $xC
+     * @param float|null $yC
      * @access public
      */
     public function setRotation($angle, $xC = null, $yC = null)
@@ -654,7 +660,6 @@ class MyPdf extends TcpdfFpdi
     /**
      * multiple public accessor because Html2Pdf need to use TCPDF without being a extend of it
      *
-     * @param  mixed
      * @return mixed
      * @access public
      */
@@ -831,35 +836,35 @@ class MyPdf extends TcpdfFpdi
 
         // To save the First action and the last point
         $first = array('', 0, 0);
-        $last = array(0, 0, 0, 0);
+        $last  = array(0, 0, 0, 0);
 
         foreach ($actions as $action) {
             switch ($action[0]) {
                 // Start the Path - move - absolute
                 case 'M':
                     $first = $action;
-                    $x = $action[1];
-                    $y = $action[2];
-                    $xc = $x;
-                    $yc = $y;
+                    $x     = $action[1];
+                    $y     = $action[2];
+                    $xc    = $x;
+                    $yc    = $y;
                     $this->_Point($x, $y, true);
                     break;
 
                 // Start the Path - move - relative
                 case 'm':
                     $first = $action;
-                    $x = $last[0] + $action[1];
-                    $y = $last[1] + $action[2];
-                    $xc = $x;
-                    $yc = $y;
+                    $x     = $last[0] + $action[1];
+                    $y     = $last[1] + $action[2];
+                    $xc    = $x;
+                    $yc    = $y;
                     $this->_Point($x, $y, true);
                     break;
 
                 // Close the Path
                 case 'Z':
                 case 'z':
-                    $x = $first[1];
-                    $y = $first[2];
+                    $x  = $first[1];
+                    $y  = $first[2];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -867,8 +872,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Line (new point)
                 case 'L':
-                    $x = $action[1];
-                    $y = $action[2];
+                    $x  = $action[1];
+                    $y  = $action[2];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -876,8 +881,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Line (vector from last point)
                 case 'l':
-                    $x = $last[0] + $action[1];
-                    $y = $last[1] + $action[2];
+                    $x  = $last[0] + $action[1];
+                    $y  = $last[1] + $action[2];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -885,8 +890,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Horizontal Line (new point)
                 case 'H':
-                    $x = $action[1];
-                    $y = $last[1];
+                    $x  = $action[1];
+                    $y  = $last[1];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -894,8 +899,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Horisontal Line (vector from last point)
                 case 'h':
-                    $x = $last[0] + $action[1];
-                    $y = $last[1];
+                    $x  = $last[0] + $action[1];
+                    $y  = $last[1];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -903,8 +908,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Vertical Line (new point)
                 case 'V':
-                    $x = $last[0];
-                    $y = $action[1];
+                    $x  = $last[0];
+                    $y  = $action[1];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -912,8 +917,8 @@ class MyPdf extends TcpdfFpdi
 
                 // Make a Vertical Line (vector from last point)
                 case 'v':
-                    $x = $last[0];
-                    $y = $last[1] + $action[1];
+                    $x  = $last[0];
+                    $y  = $last[1] + $action[1];
                     $xc = $x;
                     $yc = $y;
                     $this->_Line($x, $y, true);
@@ -923,17 +928,17 @@ class MyPdf extends TcpdfFpdi
                 case 'A':
                     $rx = $action[1]; // rx
                     $ry = $action[2]; // ry
-                    $a = $action[3]; // deviation angle of the axis X
-                    $l = $action[4]; // large-arc-flag
-                    $s = $action[5]; // sweep-flag
+                    $a  = $action[3]; // deviation angle of the axis X
+                    $l  = $action[4]; // large-arc-flag
+                    $s  = $action[5]; // sweep-flag
                     $x1 = $last[0]; // begin x
                     $y1 = $last[1]; // begin y
                     $x2 = $action[6]; // final x
                     $y2 = $action[7]; // final y
 
                     $this->_Arc2($x1, $y1, $x2, $y2, $rx, $ry, $a, $l, $s, true);
-                    $x = $x2;
-                    $y = $y2;
+                    $x  = $x2;
+                    $y  = $y2;
                     $xc = $x;
                     $yc = $y;
                     break;
@@ -942,17 +947,17 @@ class MyPdf extends TcpdfFpdi
                 case 'a':
                     $rx = $action[1]; // rx
                     $ry = $action[2]; // ry
-                    $a = $action[3]; // deviation angle of the axis X
-                    $l = $action[4]; // large-arc-flag
-                    $s = $action[5]; // sweep-flag
+                    $a  = $action[3]; // deviation angle of the axis X
+                    $l  = $action[4]; // large-arc-flag
+                    $s  = $action[5]; // sweep-flag
                     $x1 = $last[0]; // begin x
                     $y1 = $last[1]; // begin y
                     $x2 = $last[0] + $action[6]; // final x
                     $y2 = $last[1] + $action[7]; // final y
 
                     $this->_Arc2($x1, $y1, $x2, $y2, $rx, $ry, $a, $l, $s, true);
-                    $x = $x2;
-                    $y = $y2;
+                    $x  = $x2;
+                    $y  = $y2;
                     $xc = $x;
                     $yc = $y;
                     break;
@@ -966,8 +971,8 @@ class MyPdf extends TcpdfFpdi
                     $xf = $action[5];
                     $yf = $action[6];
                     $this->_Curve($x1, $y1, $x2, $y2, $xf, $yf, true);
-                    $x = $xf;
-                    $y = $yf;
+                    $x  = $xf;
+                    $y  = $yf;
                     $xc = $x2;
                     $yc = $y2;
                     break;
@@ -981,8 +986,8 @@ class MyPdf extends TcpdfFpdi
                     $xf = $last[0] + $action[5];
                     $yf = $last[1] + $action[6];
                     $this->_Curve($x1, $y1, $x2, $y2, $xf, $yf, true);
-                    $x = $xf;
-                    $y = $yf;
+                    $x  = $xf;
+                    $y  = $yf;
                     $xc = $x2;
                     $yc = $y2;
                     break;
@@ -1066,7 +1071,7 @@ class MyPdf extends TcpdfFpdi
      * @param float $rx
      * @param float $ry
      * @param float $angleBegin in radians
-     * @param float $angleEng in radians
+     * @param float $angleEnd in radians
      * @param boolean $direction
      * @param boolean $drawFirst, true => add the first point
      * @param boolean $trans apply transformation
@@ -1090,7 +1095,7 @@ class MyPdf extends TcpdfFpdi
         }
 
         // cut in segment to convert in berize curv
-        $dt = ($angleEnd - $angleBegin) / self::ARC_NB_SEGMENT;
+        $dt  = ($angleEnd - $angleBegin) / self::ARC_NB_SEGMENT;
         $dtm = $dt / 3;
 
         // center of the arc
@@ -1178,37 +1183,37 @@ class MyPdf extends TcpdfFpdi
         $v['Yr2'] = $v['yr2'] / $v['ry'];
         $v['dXr'] = $v['Xr2'] - $v['Xr1'];
         $v['dYr'] = $v['Yr2'] - $v['Yr1'];
-        $v['D'] = $v['dXr'] * $v['dXr'] + $v['dYr'] * $v['dYr'];
+        $v['D']   = $v['dXr'] * $v['dXr'] + $v['dYr'] * $v['dYr'];
 
         // if |vector| is Null, or if |vector| > 2 : impossible to make a arc => Line
         if ($v['D'] == 0 || $v['D'] > 4) {
             $this->_Line($x2, $y2, $trans);
-            return false;
+            return;
         }
 
         // convert paramters for make a arc with Center, Radius, from angleBegin to angleEnd
-        $v['s1'] = array();
-        $v['s1']['t'] = sqrt((4. - $v['D']) / $v['D']);
+        $v['s1']       = array();
+        $v['s1']['t']  = sqrt((4. - $v['D']) / $v['D']);
         $v['s1']['Xr'] = ($v['Xr1'] + $v['Xr2']) / 2. + $v['s1']['t'] * ($v['Yr2'] - $v['Yr1']) / 2.;
         $v['s1']['Yr'] = ($v['Yr1'] + $v['Yr2']) / 2. + $v['s1']['t'] * ($v['Xr1'] - $v['Xr2']) / 2.;
         $v['s1']['xr'] = $v['s1']['Xr'] * $v['rx'];
         $v['s1']['yr'] = $v['s1']['Yr'] * $v['ry'];
-        $v['s1']['x'] = $v['s1']['xr'] * cos($angle) + $v['s1']['yr'] * sin($angle);
-        $v['s1']['y'] = -$v['s1']['xr'] * sin($angle) + $v['s1']['yr'] * cos($angle);
+        $v['s1']['x']  = $v['s1']['xr'] * cos($angle) + $v['s1']['yr'] * sin($angle);
+        $v['s1']['y']  = -$v['s1']['xr'] * sin($angle) + $v['s1']['yr'] * cos($angle);
         $v['s1']['a1'] = atan2($v['y1'] - $v['s1']['y'], $v['x1'] - $v['s1']['x']);
         $v['s1']['a2'] = atan2($v['y2'] - $v['s1']['y'], $v['x2'] - $v['s1']['x']);
         if ($v['s1']['a1'] > $v['s1']['a2']) {
             $v['s1']['a1'] -= 2 * M_PI;
         }
 
-        $v['s2'] = array();
-        $v['s2']['t'] = -$v['s1']['t'];
+        $v['s2']       = array();
+        $v['s2']['t']  = -$v['s1']['t'];
         $v['s2']['Xr'] = ($v['Xr1'] + $v['Xr2']) / 2. + $v['s2']['t'] * ($v['Yr2'] - $v['Yr1']) / 2.;
         $v['s2']['Yr'] = ($v['Yr1'] + $v['Yr2']) / 2. + $v['s2']['t'] * ($v['Xr1'] - $v['Xr2']) / 2.;
         $v['s2']['xr'] = $v['s2']['Xr'] * $v['rx'];
         $v['s2']['yr'] = $v['s2']['Yr'] * $v['ry'];
-        $v['s2']['x'] = $v['s2']['xr'] * cos($angle) + $v['s2']['yr'] * sin($angle);
-        $v['s2']['y'] = -$v['s2']['xr'] * sin($angle) + $v['s2']['yr'] * cos($angle);
+        $v['s2']['x']  = $v['s2']['xr'] * cos($angle) + $v['s2']['yr'] * sin($angle);
+        $v['s2']['y']  = -$v['s2']['xr'] * sin($angle) + $v['s2']['yr'] * cos($angle);
         $v['s2']['a1'] = atan2($v['y1'] - $v['s2']['y'], $v['x1'] - $v['s2']['x']);
         $v['s2']['a2'] = atan2($v['y2'] - $v['s2']['y'], $v['x2'] - $v['s2']['x']);
         if ($v['s2']['a1'] > $v['s2']['a2']) {
@@ -1338,9 +1343,9 @@ class MyPdf extends TcpdfFpdi
         // the style of the barcode
         $style = array(
             'position' => 'S',
-            'text' => ($labelFontsize ? true : false),
-            'fgcolor' => $color,
-            'bgcolor' => false,
+            'text'     => ($labelFontsize ? true : false),
+            'fgcolor'  => $color,
+            'bgcolor'  => false,
         );
 
         // build the barcode
@@ -1418,11 +1423,11 @@ class MyPdf extends TcpdfFpdi
             }
 
             // Caption (cut to fit on the width page)
-            $str = $this->outlines[$i]['t'];
-            $strsize = $this->GetStringWidth($str);
+            $str           = $this->outlines[$i]['t'];
+            $strsize       = $this->GetStringWidth($str);
             $availableSize = $this->w - $this->lMargin - $this->rMargin - $pageCellSize - ($level * 8) - 4;
             while ($strsize >= $availableSize) {
-                $str = substr($str, 0, -1);
+                $str     = substr($str, 0, -1);
                 $strsize = $this->GetStringWidth($str);
             }
 
@@ -1432,8 +1437,8 @@ class MyPdf extends TcpdfFpdi
                 $this->Cell($strsize + 2, $this->FontSize + 2, $str);
 
                 //Filling dots
-                $w = $this->w - $this->lMargin - $this->rMargin - $pageCellSize - ($level * 8) - ($strsize + 2);
-                $nb = $w / $this->GetStringWidth('.');
+                $w    = $this->w - $this->lMargin - $this->rMargin - $pageCellSize - ($level * 8) - ($strsize + 2);
+                $nb   = (int) ($w / $this->GetStringWidth('.'));
                 $dots = str_repeat('.', $nb);
                 $this->Cell($w, $this->FontSize + 2, $dots, 0, 0, 'R');
 
@@ -1458,9 +1463,9 @@ class MyPdf extends TcpdfFpdi
         if ($this->_myLastPageGroupNb == 0) {
             return $this->getAliasNbPages();
         } else {
-            $old = $this->currpagegroup;
+            $old                 = $this->currpagegroup;
             $this->currpagegroup = '{nb' . $this->_myLastPageGroupNb . '}';
-            $new = $this->getPageGroupAlias();
+            $new                 = $this->getPageGroupAlias();
             $this->currpagegroup = $old;
 
             return $new;
@@ -1491,7 +1496,7 @@ class MyPdf extends TcpdfFpdi
      * Start a new group of pages
      *
      * @access public
-     * @return integer;
+     * @return void
      * @see tcpdf::startPageGroup
      */
     public function myStartPageGroup()

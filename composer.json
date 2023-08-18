@@ -8,7 +8,7 @@
     "html2pdf"
   ],
   "homepage": "http://html2pdf.fr/",
-  "license": "LGPL",
+  "license": "OSL-3.0",
   "authors": [
     {
       "name": "Spipu",
@@ -17,16 +17,15 @@
     }
   ],
   "require": {
-    "php": "^5.4 || ^7.0",
+    "php": "^5.6 || ^7.0 || ^8.0",
     "ext-mbstring": "*",
     "ext-gd": "*",
-    "tecnickcom/tcpdf": "^6.2",
-    "setasign/fpdi": "^2.0"
+    "tecnickcom/tcpdf": "^6.3",
+    "setasign/fpdi": "^2.4"
   },
   "require-dev": {
-    "phpunit/phpunit": ">=4.5.0",
-    "phake/phake": "~2.0",
-    "squizlabs/php_codesniffer": "~2"
+    "phpunit/phpunit": "^5.0 || ^9.0",
+    "phake/phake": "^4.4"
   },
   "suggest": {
     "fagundes/zff-html2pdf": "if you need to integrate Html2Pdf with Zend Framework 2 (zf2)",
@@ -36,8 +35,5 @@
     "psr-4": {
       "Spipu\\Html2Pdf\\": "src/"
     }
-  },
-  "config": {
-    "bin-dir": "bin"
   }
 }

@@ -20,19 +20,19 @@ class Locale
      * code of the current used locale
      * @var string
      */
-    static protected $code = null;
+    protected static $code = null;
 
     /**
      * texts of the current used locale
      * @var array
      */
-    static protected $list = array();
+    protected static $list = [];
 
     /**
      * directory where locale files are
      * @var string
      */
-    static protected $directory = null;
+    protected static $directory = null;
 
     /**
      * load the locale
@@ -52,7 +52,7 @@ class Locale
         $code = strtolower($code);
 
         // must be [a-z-0-9]
-        if (!preg_match('/^([a-z0-9]+)$/isU', $code)) {
+        if (! preg_match('/^([a-z0-9]+)$/isU', $code)) {
             $e = new LocaleException(
                 'invalid language code'
             );
@@ -65,10 +65,10 @@ class Locale
         self::$code = $code;
 
         // get the name of the locale file
-        $file = self::$directory.self::$code.'.csv';
+        $file = self::$directory . self::$code . '.csv';
 
         // the file must exist
-        if (!is_file($file)) {
+        if (! is_file($file)) {
             $e = new LocaleException(
                 'unknown language code. You can create the locale file and push it on the Html2Pdf GitHub project.'
             );
@@ -78,11 +78,11 @@ class Locale
         }
 
         // load the file
-        self::$list = array();
-        $handle = fopen($file, 'r');
-        while (!feof($handle)) {
-            $line = fgetcsv($handle);
-            if (!is_array($line) || count($line) !=2) {
+        self::$list = [];
+        $handle     = fopen($file, 'r');
+        while (! feof($handle)) {
+            $line = fgetcsv($handle, escape: '\\');
+            if (! is_array($line) || count($line) != 2) {
                 continue;
             }
             self::$list[trim($line[0])] = trim($line[1]);
@@ -98,7 +98,7 @@ class Locale
     public static function clean()
     {
         self::$code = null;
-        self::$list = array();
+        self::$list = [];
     }
 
     /**
